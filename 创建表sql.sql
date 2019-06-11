@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2019/6/11 17:16:18                           */
+/* Created on:     2019/6/11 23:48:08                           */
 /*==============================================================*/
 
 
@@ -12,15 +12,15 @@ drop table if exists UserComment;
 
 drop table if exists browsing_history;
 
+drop table if exists manager;
+
 drop table if exists member;
 
 drop table if exists pictureList;
 
 drop table if exists power;
 
-drop table if exists role;
-
-drop table if exists user;
+drop table if exists roles;
 
 /*==============================================================*/
 /* Table: Consulting                                            */
@@ -81,6 +81,24 @@ create table browsing_history
 );
 
 /*==============================================================*/
+/* Table: manager                                               */
+/*==============================================================*/
+create table manager
+(
+   u_id                 int(11) not null auto_increment,
+   r_id                 int(11),
+   username             varchar(255),
+   password             varchar(20),
+   sex                  char(2),
+   phone                char(11),
+   email                varchar(255),
+   jointime             time,
+   state                boolean,
+   mark                 char(255),
+   primary key (u_id)
+);
+
+/*==============================================================*/
 /* Table: member                                                */
 /*==============================================================*/
 create table member
@@ -119,45 +137,32 @@ create table power
 );
 
 /*==============================================================*/
-/* Table: role                                                  */
+/* Table: roles                                                 */
 /*==============================================================*/
-create table role
+create table roles
 (
-   r_id                 int(11) not null,
+   r_id                 int(11) not null auto_increment,
    power_id             int(11),
-   remarks              varchar(255),
+   mark                 varchar(255),
+   name                 char(10),
    primary key (r_id)
 );
 
-/*==============================================================*/
-/* Table: user                                                  */
-/*==============================================================*/
-create table user
-(
-   u_id                 int(11) not null,
-   r_id                 int(11),
-   username             varchar(255),
-   phone                char(11),
-   email                varchar(255),
-   jointime             time,
-   continu              boolean,
-   primary key (u_id)
-);
-
-alter table UserComment add constraint FK_Reference_2 foreign key (m_id)
+alter table UserComment add constraint FK_Reference_9 foreign key (m_id)
       references member (m_id) on delete restrict on update restrict;
 
 alter table browsing_history add constraint FK_Reference_6 foreign key (m_id)
       references member (m_id) on delete restrict on update restrict;
 
+alter table manager add constraint FK_Reference_8 foreign key (r_id)
+      references roles (r_id) on delete restrict on update restrict;
+
 alter table pictureList add constraint FK_Reference_5 foreign key (P_id)
       references Picture (P_id) on delete restrict on update restrict;
 
-alter table role add constraint FK_Reference_7 foreign key (power_id)
+alter table roles add constraint FK_Reference_7 foreign key (power_id)
       references power (power_id) on delete restrict on update restrict;
 
-alter table user add constraint FK_Reference_2 foreign key (r_id)
-      references role (r_id) on delete restrict on update restrict;
 
 
 CREATE TABLE `categories` (
