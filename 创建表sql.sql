@@ -1,51 +1,24 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2019/6/11 16:00:24                           */
+/* Created on:     2019/6/11 17:16:18                           */
 /*==============================================================*/
 
 
-alter table Consulting
-   drop primary key;
-
 drop table if exists Consulting;
-
-alter table Picture
-   drop primary key;
 
 drop table if exists Picture;
 
-alter table UserComment
-   drop primary key;
-
 drop table if exists UserComment;
 
-alter table "browsing history"
-   drop primary key;
-
-drop table if exists "browsing history";
-
-alter table member
-   drop primary key;
+drop table if exists browsing_history;
 
 drop table if exists member;
 
-alter table pictureList
-   drop primary key;
-
 drop table if exists pictureList;
-
-alter table power
-   drop primary key;
 
 drop table if exists power;
 
-alter table role
-   drop primary key;
-
 drop table if exists role;
-
-alter table user
-   drop primary key;
 
 drop table if exists user;
 
@@ -61,11 +34,9 @@ create table Consulting
    C_upTime             datetime,
    C_seeTimes           int,
    C_state              boolean,
-   C_note               varchar(500)
+   C_note               varchar(500),
+   primary key (C_id)
 );
-
-alter table Consulting
-   add primary key (C_id);
 
 /*==============================================================*/
 /* Table: Picture                                               */
@@ -79,11 +50,9 @@ create table Picture
    P_tags               varchar(20),
    P_uptime             datetime,
    P_state              boolean,
-   P_picture            varchar(50)
+   P_picture            varchar(50),
+   primary key (P_id)
 );
-
-alter table Picture
-   add primary key (P_id);
 
 /*==============================================================*/
 /* Table: UserComment                                           */
@@ -94,26 +63,22 @@ create table UserComment
    m_id                 int(8),
    C_Comments           varchar(100),
    C_Html               varchar(50),
-   C_Time               datetime
+   C_Time               datetime,
+   primary key (ID)
 );
 
-alter table UserComment
-   add primary key (ID);
-
 /*==============================================================*/
-/* Table: "browsing history"                                    */
+/* Table: browsing_history                                      */
 /*==============================================================*/
-create table "browsing history"
+create table browsing_history
 (
    b_id                 int not null auto_increment,
    m_id                 int(8),
    b_ip                 varchar(15) not null,
    b_datatime           datetime,
-   b_url                varchar(50) not null
+   b_url                varchar(50) not null,
+   primary key (b_id)
 );
-
-alter table "browsing history"
-   add primary key (b_id);
 
 /*==============================================================*/
 /* Table: member                                                */
@@ -127,11 +92,9 @@ create table member
    m_email              varchar(20),
    m_location           varchar(30),
    m_data               datetime not null,
-   m_statu              varchar(5) not null
+   m_statu              varchar(5) not null,
+   primary key (m_id)
 );
-
-alter table member
-   add primary key (m_id);
 
 /*==============================================================*/
 /* Table: pictureList                                           */
@@ -140,24 +103,20 @@ create table pictureList
 (
    PL_id                int not null auto_increment,
    P_id                 int,
-   PL_note              varchar(100)
+   PL_note              varchar(100),
+   primary key (PL_id)
 );
-
-alter table pictureList
-   add primary key (PL_id);
 
 /*==============================================================*/
 /* Table: power                                                 */
 /*==============================================================*/
 create table power
 (
-   p_id                 int(11) not null,
+   power_id             int(11) not null,
    detail               varchar(255),
-   used                 bool(1)
+   used                 boolean,
+   primary key (power_id)
 );
-
-alter table power
-   add primary key (p_id);
 
 /*==============================================================*/
 /* Table: role                                                  */
@@ -165,12 +124,10 @@ alter table power
 create table role
 (
    r_id                 int(11) not null,
-   p_id                 int(11),
-   remarks              varchar(255)
+   power_id             int(11),
+   remarks              varchar(255),
+   primary key (r_id)
 );
-
-alter table role
-   add primary key (r_id);
 
 /*==============================================================*/
 /* Table: user                                                  */
@@ -183,26 +140,25 @@ create table user
    phone                char(11),
    email                varchar(255),
    jointime             time,
-   continu              bool(1)
+   continu              boolean,
+   primary key (u_id)
 );
-
-alter table user
-   add primary key (u_id);
 
 alter table UserComment add constraint FK_Reference_2 foreign key (m_id)
       references member (m_id) on delete restrict on update restrict;
 
-alter table "browsing history" add constraint FK_Reference_6 foreign key (m_id)
+alter table browsing_history add constraint FK_Reference_6 foreign key (m_id)
       references member (m_id) on delete restrict on update restrict;
 
 alter table pictureList add constraint FK_Reference_5 foreign key (P_id)
       references Picture (P_id) on delete restrict on update restrict;
 
-alter table role add constraint FK_Reference_1 foreign key (p_id)
-      references power (p_id) on delete restrict on update restrict;
+alter table role add constraint FK_Reference_7 foreign key (power_id)
+      references power (power_id) on delete restrict on update restrict;
 
 alter table user add constraint FK_Reference_2 foreign key (r_id)
       references role (r_id) on delete restrict on update restrict;
+
 
 CREATE TABLE `categories` (
 	`id` INT(11) NOT NULL AUTO_INCREMENT,
@@ -238,3 +194,28 @@ CREATE TABLE `column_meta` (
 )
 ENGINE=InnoDB
 ;
+
+
+DROP TABLE IF EXISTS `diary`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `diary` (
+  `ID` int(10) NOT NULL DEFAULT '0',
+  `Type` int(10) DEFAULT NULL COMMENT '类型',
+  `content` varchar(255) DEFAULT NULL COMMENT '内容',
+  `admin` varchar(255) DEFAULT NULL COMMENT '用户名',
+  `IP` varchar(255) DEFAULT NULL COMMENT '客户端IP',
+  `Time` varchar(255) DEFAULT NULL COMMENT '时间',
+  PRIMARY KEY (`ID`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `diary`
+--
+
+LOCK TABLES `diary` WRITE;
+/*!40000 ALTER TABLE `diary` DISABLE KEYS */;
+/*!40000 ALTER TABLE `diary` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
