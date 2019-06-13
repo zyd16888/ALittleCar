@@ -36,6 +36,8 @@ git push origin 本地分支名:远程分支名 -u
 
 开发完成后，使用 `git add .` 将更改的文件写入暂存区，然后使用 `git commit -m "提交信息"` 将更改提交到本地git仓库，然后使用 `git push origin 分支名` ，将更改提交到远程仓库。
 
+![](https://data.singlelovely.cn/images/20190613152533.png)
+
 提交远程仓库后，可以到GitHub上提 `Pull requests` 请求将分支更改合入master主分支。
 
 每次重新开始开发前，请将分支切换回`master`分支。使用 `git pull` 拉取远程分支的更改，然后将切换回自己的分支，使用 `git merge master` 将`master`分支的更改合入当前开发分支。
