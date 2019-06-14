@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2019/6/14 10:06:34                           */
+/* Created on:     2019/6/14 10:28:04                           */
 /*==============================================================*/
 
 
@@ -13,6 +13,8 @@ drop table if exists Picture;
 drop table if exists UserComment;
 
 drop table if exists browsing_history;
+
+drop table if exists grants;
 
 drop table if exists manager;
 
@@ -107,6 +109,17 @@ create table browsing_history
 );
 
 /*==============================================================*/
+/* Table: grants                                                */
+/*==============================================================*/
+create table grants
+(
+   grants_id            bigint(20) not null auto_increment,
+   r_id                 bigint(20),
+   power_id             bigint(20),
+   primary key (grants_id)
+);
+
+/*==============================================================*/
 /* Table: manager                                               */
 /*==============================================================*/
 create table manager
@@ -181,7 +194,6 @@ create table power
 create table roles
 (
    r_id                 bigint(20) not null auto_increment,
-   power_id             bigint(20),
    mark                 varchar(255),
    name                 varchar(255),
    create_man           varchar(30),
@@ -198,15 +210,17 @@ alter table UserComment add constraint FK_Reference_8 foreign key (m_id)
 alter table browsing_history add constraint FK_Reference_6 foreign key (m_id)
       references member (m_id) on delete restrict on update restrict;
 
+alter table grants add constraint FK_Reference_7 foreign key (r_id)
+      references roles (r_id) on delete restrict on update restrict;
+
+alter table grants add constraint FK_Reference_9 foreign key (power_id)
+      references power (power_id) on delete restrict on update restrict;
+
 alter table manager add constraint FK_Reference_4 foreign key (r_id)
       references roles (r_id) on delete restrict on update restrict;
 
 alter table pictureList add constraint FK_Reference_5 foreign key (P_id)
       references Picture (P_id) on delete restrict on update restrict;
-
-alter table roles add constraint FK_Reference_7 foreign key (power_id)
-      references power (power_id) on delete restrict on update restrict;
-
 CREATE TABLE `categories` (
 	`id` INT(11) NOT NULL AUTO_INCREMENT,
 	`name` VARCHAR(50) NULL DEFAULT NULL,
@@ -254,3 +268,4 @@ CREATE TABLE `column_meta` (
 	CONSTRAINT `FK_column_meta_columns` FOREIGN KEY (`column_id`) REFERENCES `columns` (`id`)
 )
 ;
+
