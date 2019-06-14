@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
 import lombok.*;
 
 import java.io.Serializable;
@@ -29,7 +30,7 @@ public class UserComment extends Model<UserComment>{
     /**
      * 评论ID作为 主键，不能为空，自增
      */
-    @TableId(value = "ID",type = IDType,AUTO)
+    @TableId(value = "ID",type = IdType.AUTO)
     private String ID;
 
     /**
