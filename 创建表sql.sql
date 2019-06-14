@@ -1,10 +1,12 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2019/6/14 9:41:38                            */
+/* Created on:     2019/6/14 10:06:34                           */
 /*==============================================================*/
 
 
 drop table if exists Consulting;
+
+drop table if exists Diary;
 
 drop table if exists Picture;
 
@@ -41,6 +43,20 @@ create table Consulting
    C_update_time        datetime,
    C_delete_state       char(2),
    primary key (C_id)
+);
+
+/*==============================================================*/
+/* Table: Diary                                                 */
+/*==============================================================*/
+create table Diary
+(
+   id                   bigint(20) not null,
+   type                 int(11),
+   content              varchar(255),
+   admin                varchar(255),
+   IP                   varchar(255),
+   Time                 datetime,
+   primary key (id)
 );
 
 /*==============================================================*/
@@ -151,6 +167,11 @@ create table power
    power_id             bigint(20) not null,
    detail               varchar(255),
    used                 boolean,
+   create_man           varchar(30),
+   create_time          datetime,
+   update_man           varchar(30),
+   update_time          datetime,
+   delete_state         char(2),
    primary key (power_id)
 );
 
@@ -162,7 +183,12 @@ create table roles
    r_id                 bigint(20) not null auto_increment,
    power_id             bigint(20),
    mark                 varchar(255),
-   name                 char(10),
+   name                 varchar(255),
+   create_man           varchar(30),
+   create_time          datetime,
+   update_man           varchar(30),
+   update_time          datetime,
+   delete_state         char(2),
    primary key (r_id)
 );
 
@@ -228,4 +254,3 @@ CREATE TABLE `column_meta` (
 	CONSTRAINT `FK_column_meta_columns` FOREIGN KEY (`column_id`) REFERENCES `columns` (`id`)
 )
 ;
-
