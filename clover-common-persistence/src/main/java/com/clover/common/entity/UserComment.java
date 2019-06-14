@@ -31,9 +31,11 @@ public class UserComment extends Model<UserComment>{
      */
     @TableId(value = "ID",type = IDType,AUTO)
     private String ID;
+
     /**
      * 用户id作为外键
      */
+    @TableField("m_id")
     private String m_id;
     /**
      * 评论内容
