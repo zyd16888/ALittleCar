@@ -1,10 +1,12 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2019/6/11 23:48:08                           */
+/* Created on:     2019/6/14 10:06:34                           */
 /*==============================================================*/
 
 
 drop table if exists Consulting;
+
+drop table if exists Diary;
 
 drop table if exists Picture;
 
@@ -27,7 +29,7 @@ drop table if exists roles;
 /*==============================================================*/
 create table Consulting
 (
-   C_id                 int not null auto_increment,
+   C_id                 bigint(20) not null auto_increment,
    C_title              varchar(30) not null,
    C_class              varchar(10),
    C_from               varchar(20),
@@ -35,7 +37,26 @@ create table Consulting
    C_seeTimes           int,
    C_state              boolean,
    C_note               varchar(500),
+   C_create_man         varchar(30),
+   C_create_time        datetime,
+   C_update_man         varchar(30),
+   C_update_time        datetime,
+   C_delete_state       char(2),
    primary key (C_id)
+);
+
+/*==============================================================*/
+/* Table: Diary                                                 */
+/*==============================================================*/
+create table Diary
+(
+   id                   bigint(20) not null,
+   type                 int(11),
+   content              varchar(255),
+   admin                varchar(255),
+   IP                   varchar(255),
+   Time                 datetime,
+   primary key (id)
 );
 
 /*==============================================================*/
@@ -43,7 +64,7 @@ create table Consulting
 /*==============================================================*/
 create table Picture
 (
-   P_id                 int not null auto_increment,
+   P_id                 bigint(20) not null auto_increment,
    P_class              varchar(10),
    P_frist              varchar(30),
    p_name               varchar(20),
@@ -51,6 +72,11 @@ create table Picture
    P_uptime             datetime,
    P_state              boolean,
    P_picture            varchar(50),
+   P_create_man         varchar(30),
+   P_create_time        datetime,
+   P_update_man         varchar(30),
+   P_update_time        datetime,
+   P_delete_state       char(2),
    primary key (P_id)
 );
 
@@ -59,8 +85,8 @@ create table Picture
 /*==============================================================*/
 create table UserComment
 (
-   ID                   integer not null auto_increment,
-   m_id                 int(8),
+   ID                   bigint(20) not null auto_increment,
+   m_id                 bigint(20),
    C_Comments           varchar(100),
    C_Html               varchar(50),
    C_Time               datetime,
@@ -72,8 +98,8 @@ create table UserComment
 /*==============================================================*/
 create table browsing_history
 (
-   b_id                 int not null auto_increment,
-   m_id                 int(8),
+   b_id                 bigint(20) not null auto_increment,
+   m_id                 bigint(20),
    b_ip                 varchar(15) not null,
    b_datatime           datetime,
    b_url                varchar(50) not null,
@@ -85,16 +111,20 @@ create table browsing_history
 /*==============================================================*/
 create table manager
 (
-   u_id                 int(11) not null auto_increment,
-   r_id                 int(11),
+   u_id                 bigint(20) not null auto_increment,
+   r_id                 bigint(20),
    username             varchar(255),
    password             varchar(20),
    sex                  char(2),
    phone                char(11),
    email                varchar(255),
+   create_man           varchar(30),
    jointime             time,
+   update_man           varchar(30),
+   update_time          datetime,
    state                boolean,
    mark                 char(255),
+   delete_state         char(2),
    primary key (u_id)
 );
 
@@ -103,14 +133,18 @@ create table manager
 /*==============================================================*/
 create table member
 (
-   m_id                 int(8) not null,
+   m_id                 bigint(20) not null,
    m_username           varchar(5) not null,
    m_sex                varchar(2),
    m_phone              int(15) not null,
    m_email              varchar(20),
    m_location           varchar(30),
+   create_man           varchar(30),
    m_data               datetime not null,
+   update_man           varchar(30),
+   update_time          datetime,
    m_statu              varchar(5) not null,
+   delete_state         char(2),
    primary key (m_id)
 );
 
@@ -119,8 +153,8 @@ create table member
 /*==============================================================*/
 create table pictureList
 (
-   PL_id                int not null auto_increment,
-   P_id                 int,
+   PL_id                integer(20) not null auto_increment,
+   P_id                 bigint(20),
    PL_note              varchar(100),
    primary key (PL_id)
 );
@@ -130,9 +164,14 @@ create table pictureList
 /*==============================================================*/
 create table power
 (
-   power_id             int(11) not null,
+   power_id             bigint(20) not null,
    detail               varchar(255),
    used                 boolean,
+   create_man           varchar(30),
+   create_time          datetime,
+   update_man           varchar(30),
+   update_time          datetime,
+   delete_state         char(2),
    primary key (power_id)
 );
 
@@ -141,20 +180,25 @@ create table power
 /*==============================================================*/
 create table roles
 (
-   r_id                 int(11) not null auto_increment,
-   power_id             int(11),
+   r_id                 bigint(20) not null auto_increment,
+   power_id             bigint(20),
    mark                 varchar(255),
-   name                 char(10),
+   name                 varchar(255),
+   create_man           varchar(30),
+   create_time          datetime,
+   update_man           varchar(30),
+   update_time          datetime,
+   delete_state         char(2),
    primary key (r_id)
 );
 
-alter table UserComment add constraint FK_Reference_9 foreign key (m_id)
+alter table UserComment add constraint FK_Reference_8 foreign key (m_id)
       references member (m_id) on delete restrict on update restrict;
 
 alter table browsing_history add constraint FK_Reference_6 foreign key (m_id)
       references member (m_id) on delete restrict on update restrict;
 
-alter table manager add constraint FK_Reference_8 foreign key (r_id)
+alter table manager add constraint FK_Reference_4 foreign key (r_id)
       references roles (r_id) on delete restrict on update restrict;
 
 alter table pictureList add constraint FK_Reference_5 foreign key (P_id)
@@ -163,64 +207,50 @@ alter table pictureList add constraint FK_Reference_5 foreign key (P_id)
 alter table roles add constraint FK_Reference_7 foreign key (power_id)
       references power (power_id) on delete restrict on update restrict;
 
-
-
 CREATE TABLE `categories` (
 	`id` INT(11) NOT NULL AUTO_INCREMENT,
 	`name` VARCHAR(50) NULL DEFAULT NULL,
 	`level` INT(11) NULL DEFAULT NULL,
 	`from` INT(11) NULL DEFAULT NULL,
 	`append` VARCHAR(50) NULL DEFAULT NULL,
+	`create_by_bight` VARCHAR(50) NULL DEFAULT NULL,
+	`create time` DATE NULL DEFAULT NULL,
+	`update_by_bight` VARCHAR(50) NULL DEFAULT NULL,
+	`update_time` DATE NULL DEFAULT NULL,
+	`delete_fliag` TINYINT(4) NULL DEFAULT '0',
 	PRIMARY KEY (`id`),
 	INDEX `FK_categories_categories` (`from`),
 	CONSTRAINT `FK_categories_categories` FOREIGN KEY (`from`) REFERENCES `categories` (`id`)
 )
-ENGINE=InnoDB
 ;
+
 CREATE TABLE `columns` (
 	`id` INT(11) NOT NULL AUTO_INCREMENT,
 	`name` VARCHAR(50) NULL DEFAULT NULL,
 	`level` INT(11) NULL DEFAULT NULL,
 	`from` INT(11) NULL DEFAULT NULL,
+	`create_by_bight` VARCHAR(50) NULL DEFAULT NULL,
+	`create time` DATE NULL DEFAULT NULL,
+	`update_by_bight` VARCHAR(50) NULL DEFAULT NULL,
+	`update_time` DATE NULL DEFAULT NULL,
+	`delete_fliag` TINYINT(4) NULL DEFAULT '0',
 	PRIMARY KEY (`id`),
 	INDEX `FK_columns_columns` (`from`),
 	CONSTRAINT `FK_columns_columns` FOREIGN KEY (`from`) REFERENCES `columns` (`id`)
 )
-ENGINE=InnoDB
 ;
 CREATE TABLE `column_meta` (
 	`column_meta_id` INT(11) NOT NULL,
 	`column_id` INT(11) NULL DEFAULT NULL,
 	`meta_key` INT(11) NOT NULL,
 	`meta_value` INT(11) NOT NULL,
+	`create_by_bight` VARCHAR(50) NULL DEFAULT NULL,
+	`create time` DATE NULL DEFAULT NULL,
+	`update_by_bight` VARCHAR(50) NULL DEFAULT NULL,
+	`update_time` DATE NULL DEFAULT NULL,
+	`delete_fliag` TINYINT(4) NULL DEFAULT '0',
 	PRIMARY KEY (`column_meta_id`),
 	INDEX `FK_column_meta_columns` (`column_id`),
 	CONSTRAINT `FK_column_meta_columns` FOREIGN KEY (`column_id`) REFERENCES `columns` (`id`)
 )
-ENGINE=InnoDB
 ;
-
-
-DROP TABLE IF EXISTS `diary`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `diary` (
-  `ID` int(10) NOT NULL DEFAULT '0',
-  `Type` int(10) DEFAULT NULL COMMENT '类型',
-  `content` varchar(255) DEFAULT NULL COMMENT '内容',
-  `admin` varchar(255) DEFAULT NULL COMMENT '用户名',
-  `IP` varchar(255) DEFAULT NULL COMMENT '客户端IP',
-  `Time` varchar(255) DEFAULT NULL COMMENT '时间',
-  PRIMARY KEY (`ID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `diary`
---
-
-LOCK TABLES `diary` WRITE;
-/*!40000 ALTER TABLE `diary` DISABLE KEYS */;
-/*!40000 ALTER TABLE `diary` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
