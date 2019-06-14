@@ -11,7 +11,7 @@ import java.io.Serializable;
 
 /**
  * <p>
- * 角色表
+ * 权限表
  * </p>
  *
  * @author dingpengfei
@@ -23,38 +23,32 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@TableName("roles")
-public class Role extends Model<Role> {
+@TableName("Power")
+public class Power extends Model<Power> {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 角色id
-     */
-    @TableId(value="r_id",type= IdType.AUTO)
-    private String r_id;
-
-    /**
      * 权限id
      */
-    @TableField("power_id")
+    @TableId(value="power_id",type= IdType.AUTO)
     private String power_id;
 
     /**
      * 权限描述
      */
-    @TableField("mark")
-    private String mark;
+    @TableField("detail")
+    private String detail;
 
     /**
-     * 角色名
+     * 权限启用
      */
-    @TableField("name")
-    private String name;
+    @TableField("used")
+    private String used;
 
     @Override
     protected Serializable pkVal() {
-        return this.r_id;
+        return this.power_id;
     }
 
 }
